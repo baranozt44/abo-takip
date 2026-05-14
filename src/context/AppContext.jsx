@@ -4,8 +4,13 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
     const [tools, setTools] = useState(() => {
-        const saved = localStorage.getItem("tech-track-data");
-        return saved ? JSON.parse(saved) : [];
+        try {
+            const saved = localStorage.getItem("tech-track-data");
+            return saved ? JSON.parse(saved) : [];
+        } catch (error) {
+            console.error("LocalStorage yükleme hatası:", error);
+            return [];
+        }
     });
 
     const [editingTool, setEditingTool] = useState(null);
@@ -21,7 +26,7 @@ export const AppProvider = ({ children }) => {
 
     const updateTool = (updatedTool) => {
         setTools(tools.map(t => t.id === updatedTool.id ? updatedTool : t));
-        setEditingTool(null); // Güncelleme bitince temizle
+        setEditingTool(null);
     };
 
     return (
