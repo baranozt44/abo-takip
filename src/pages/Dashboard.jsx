@@ -1,11 +1,13 @@
 import { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-import { Trash2, Calendar, Edit3 } from 'lucide-react';
 
 const Dashboard = () => {
     const { tools, deleteTool, setEditingTool } = useContext(AppContext);
 
-    const totalMonthly = tools.reduce((acc, curr) => acc + parseFloat(curr.price || 0), 0);
+    const totalMonthly = tools.reduce((acc, curr) => {
+        const val = parseFloat(curr.price);
+        return acc + (isNaN(val) ? 0 : val);
+    }, 0);
 
     return (
         <div className="spacing-y">
@@ -54,27 +56,22 @@ const Dashboard = () => {
                                             </span>
                                         </td>
                                         <td className="text-slate-500 text-xs">
-                                            <div className="flex items-center gap-1.5">
-                                                <Calendar size={12} className="icon-muted" />
-                                                {tool.date || '-'}
-                                            </div>
+                                            {tool.date || '-'}
                                         </td>
                                         <td className="font-bold text-blue-400">${tool.price}</td>
                                         <td className="text-right">
                                             <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button 
                                                     onClick={() => setEditingTool(tool)} 
-                                                    className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-amber-400/10 rounded-lg transition-all"
-                                                    title="Düzenle"
+                                                    className="text-xs text-amber-500 hover:underline"
                                                 >
-                                                    <Edit3 size={16} />
+                                                    Düzenle
                                                 </button>
                                                 <button 
                                                     onClick={() => deleteTool(tool.id)} 
-                                                    className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
-                                                    title="Sil"
+                                                    className="text-xs text-red-500 hover:underline"
                                                 >
-                                                    <Trash2 size={16} />
+                                                    Sil
                                                 </button>
                                             </div>
                                         </td>
